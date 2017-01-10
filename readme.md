@@ -47,14 +47,13 @@ The search field muss have q as name.
 
 ## Prerequisites
 
-
 ### Search engine ID
 
-By calling the API user issues requests against an existing instance of a Custom Search Engine. Therefore, before using the API, you need to create one in the Control Panel. Follow the tutorial to learn more about different configuration options. You can find the engine's ID in the Setup > Basics > Details section of the Control Panel.
+By calling the API user issues requests against an existing instance of a Custom Search Engine. Therefore, before using the API, you need to create one in the [Control Panel](http://cse.google.com/manage/all) . Follow the [tutorial](https://developers.google.com/custom-search/docs/tutorial/creatingcse) to learn more about different configuration options. You can find the engine's ID in the **Setup > Basics > Details** section of the Control Panel.
 
 ### API key
 
-JSON/Atom Custom Search API requires the use of an API key. You need to fill it in the settings of your site.
+Custom Search API requires the use of an API key. You need to fill it in the settings of your site.
 
 Custom Search Engine (free edition) users can obtain the key from the [Google API Console](https://console.developers.google.com/) .
 
