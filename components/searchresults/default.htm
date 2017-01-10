@@ -1,0 +1,11 @@
+<h1>{{ totalResults }} Results for {{search}}</h1>
+{% if results %}
+<ul>
+    {% for result in results %}
+    <li>
+        <h3><a href="{{ result.link }}">{{ result.htmlTitle|raw }}</a></h3>
+        {{ result.htmlSnippet|raw }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}

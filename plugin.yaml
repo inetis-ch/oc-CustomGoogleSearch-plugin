@@ -1,0 +1,6 @@
+plugin:
+    name: 'inetis.googlecustomsearch::lang.plugin.name'
+    description: 'inetis.googlecustomsearch::lang.plugin.description'
+    author: inetis
+    icon: oc-icon-search
+    homepage: ''
