@@ -41,8 +41,8 @@ class SearchResults extends ComponentBase
                 'required'    => true,
             ],
             'resultPerPage' => [
-                'title'       => 'Result per page',
-                'description' => 'Result per page',
+                'title'       => 'Results per page',
+                'description' => 'Results per page',
                 'default'     => 20,
                 'type'        => 'string',
                 'required'    => true,
