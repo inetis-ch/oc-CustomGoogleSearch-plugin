@@ -23,11 +23,42 @@ class SearchResults extends ComponentBase
         ];
     }
 
+
+    public function defineProperties()
+    {
+        return [
+            'apikey' => [
+                'title' => 'Google API Key',
+                'description' => 'API kex from the Google Console',
+                'default' => '',
+                'type' => 'string',
+                'required' => true,
+            ],
+            'cx' => [
+                'title' => 'Custom search engine id',
+                'description' => 'Engine id format 1234:xxxxxx',
+                'default' => '',
+                'type' => 'string',
+                'required' => true,
+            ],
+            'resultPerPage' => [
+                'title' => 'Result per page',
+                'description' => 'Result per page',
+                'default' => 20,
+                'type' => 'int',
+                'required' => true,
+            ]
+        ];
+    }
+
+    /**
+     * Executed when this component is bound to a page or layout.
+     */
     public function onRun()
     {
         $this->search = get('q');
         $this->currentPage = (int)get('page', 1);
-        $this->resultPerPage = (int)Settings::get('resultPerPage', 25);
+        $this->resultPerPage =  $this->property('resultPerPage');
 
         $url = $this->buildAPIUrl();
         $response = json_decode(Http::get($url));
@@ -48,13 +79,14 @@ class SearchResults extends ComponentBase
     }
 
     /**
+     * Calculate the API url call
      * @return string
      */
     private function buildAPIUrl()
     {
 
-        $apiKey = Settings::get('apikey');
-        $cx = Settings::get('cx');
+        $apiKey = $this->property('apikey');
+        $cx = $this->property('cx');
 
         $start = ($this->currentPage - 1) * $this->resultPerPage + 1;
         $params = array('key' => $apiKey,

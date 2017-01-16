@@ -10,33 +10,37 @@ Here is the default template, you can format it any way you like.
 {% if results %}
 <ul>
     {% for result in results %}
-    <li>
+    <li> 
         <h3><a href="{{ result.link }}">{{ result.htmlTitle|raw }}</a></h3>
         {{ result.htmlSnippet|raw }}
     </li>
     {% endfor %}
 </ul>
+{{ results.render|raw }}
 {% endif %}
 ```
 
-You can embed this search in your site. Add the CustomGoogleSearch
+You can embed this search in your site. Add the CustomGoogleSearch component
 
-Simple use case:
-```
-title = "Search"
-url = "/search"
 
-[searchResults]
-==
-<div class="container">
-    {% component 'searchResults' %}
-</div>
-```
+### Components
+Name | Page variable | Description 
+------------- | ------------- | -------------
+Search | `{% component 'search' %}` | Outputs the search form
+
+**Properties**
+
+Property | Description | Default Value
+------------- | ------------- | ------------- | -------------
+apikey  | Google API Key | -
+cx  | Custom search engine id | format 1232342342344:xxxxxx
+resultPerPage  | Result per page | 20
+
 
 ## Form
 You need also to create a form to send the request to the display page.
 ```
-<form action="/search" method="get">
+<form action="/your_search_page" method="get">
 	<div class="search">
 	<input name="q" type="text"/>
 	<input type="submit" value="Search">
