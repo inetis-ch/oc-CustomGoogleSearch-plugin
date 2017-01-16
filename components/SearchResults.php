@@ -18,35 +18,34 @@ class SearchResults extends ComponentBase
     public function componentDetails()
     {
         return [
-            'name' => 'Search Result',
+            'name'        => 'Search Result',
             'description' => 'Search Result'
         ];
     }
 
-
     public function defineProperties()
     {
         return [
-            'apikey' => [
-                'title' => 'Google API Key',
+            'apikey'        => [
+                'title'       => 'Google API Key',
                 'description' => 'API kex from the Google Console',
-                'default' => '',
-                'type' => 'string',
-                'required' => true,
+                'default'     => '',
+                'type'        => 'string',
+                'required'    => true,
             ],
-            'cx' => [
-                'title' => 'Custom search engine id',
+            'cx'            => [
+                'title'       => 'Custom search engine id',
                 'description' => 'Engine id format 1234:xxxxxx',
-                'default' => '',
-                'type' => 'string',
-                'required' => true,
+                'default'     => '',
+                'type'        => 'string',
+                'required'    => true,
             ],
             'resultPerPage' => [
-                'title' => 'Result per page',
+                'title'       => 'Result per page',
                 'description' => 'Result per page',
-                'default' => 20,
-                'type' => 'string',
-                'required' => true,
+                'default'     => 20,
+                'type'        => 'string',
+                'required'    => true,
             ]
         ];
     }
@@ -56,22 +55,23 @@ class SearchResults extends ComponentBase
      */
     public function onRun()
     {
-        $this->search = get('q');
-        $this->currentPage = (int)get('page', 1);
-        $this->resultPerPage =  $this->property('resultPerPage');
+        $this->search        = get('q');
+        $this->currentPage   = (int) get('page', 1);
+        $this->resultPerPage = $this->property('resultPerPage');
 
-        $url = $this->buildAPIUrl();
+        $url      = $this->buildAPIUrl();
         $response = json_decode(Http::get($url));
 
         $this->page['search'] = $this->search;
 
-        if (property_exists($response, 'error')) {
+        if (property_exists($response, 'error'))
+        {
             Flash::error($response->error->message);
         }
         elseif ($response->searchInformation->totalResults)
         {
             $this->page['totalResults'] = $response->searchInformation->totalResults;
-            $result = new LengthAwarePaginator($response->items, $response->searchInformation->totalResults, $this->resultPerPage, $this->currentPage);
+            $result                     = new LengthAwarePaginator($response->items, $response->searchInformation->totalResults, $this->resultPerPage, $this->currentPage);
             $result->setPath('search');
             $result->addQuery('q', $this->search);
             $this->page['results'] = $result;
@@ -80,19 +80,21 @@ class SearchResults extends ComponentBase
 
     /**
      * Calculate the API url call
+     *
      * @return string
      */
     private function buildAPIUrl()
     {
 
         $apiKey = $this->property('apikey');
-        $cx = $this->property('cx');
+        $cx     = $this->property('cx');
 
-        $start = ($this->currentPage - 1) * $this->resultPerPage + 1;
-        $params = array('key' => $apiKey,
-            'cx' => $cx,
-            'start' => $start,
-            'q' => $this->search);
+        $start  = ($this->currentPage - 1) * $this->resultPerPage + 1;
+        $params = array('key'   => $apiKey,
+                        'cx'    => $cx,
+                        'start' => $start,
+                        'q'     => $this->search,
+                        'num'   => $this->resultPerPage);
 
         return self::APIURL . '?' . http_build_query($params);
     }
