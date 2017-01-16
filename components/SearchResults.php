@@ -72,7 +72,7 @@ class SearchResults extends ComponentBase
         {
             $this->page['totalResults'] = $response->searchInformation->totalResults;
             $result                     = new LengthAwarePaginator($response->items, $response->searchInformation->totalResults, $this->resultPerPage, $this->currentPage);
-            $result->setPath('search');
+            $result->setPath($this->page['baseFileName']);
             $result->addQuery('q', $this->search);
             $this->page['results'] = $result;
         }
