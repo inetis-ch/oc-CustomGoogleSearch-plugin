@@ -3,6 +3,7 @@
 use Cms\Classes\ComponentBase;
 use Http;
 use Flash;
+use Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Inetis\GoogleCustomSearch\Models\Settings;
 
@@ -28,7 +29,7 @@ class SearchResults extends ComponentBase
         return [
             'apikey'        => [
                 'title'       => 'Google API Key',
-                'description' => 'API kex from the Google Console',
+                'description' => 'API key from the Google Console',
                 'default'     => '',
                 'type'        => 'string',
                 'required'    => true,
@@ -46,6 +47,12 @@ class SearchResults extends ComponentBase
                 'default'     => 20,
                 'type'        => 'string',
                 'required'    => true,
+            ],
+            'sendReferer' => [
+                'title' => 'Send HTTP Referer',
+                'description' => 'If you are using "HTTP Referer" to restrict access to your Google API Key, please enable this option to make the plugin send the url of the viewed page as referer.',
+                'default' => true,
+                'type' => 'checkbox'
             ]
         ];
     }
@@ -59,8 +66,8 @@ class SearchResults extends ComponentBase
         $this->currentPage   = (int) get('page', 1);
         $this->resultPerPage = $this->property('resultPerPage');
 
-        $url      = $this->buildAPIUrl();
-        $response = json_decode(Http::get($url));
+        $http     = $this->buildRequest();
+        $response = json_decode($http->send());
 
         $this->page['search'] = $this->search;
 
@@ -97,5 +104,17 @@ class SearchResults extends ComponentBase
                         'num'   => $this->resultPerPage);
 
         return self::APIURL . '?' . http_build_query($params);
+    }
+
+    private function buildRequest()
+    {
+        $http = Http::make($this->buildAPIUrl(), 'GET');
+
+        if ($this->property('sendReferer'))
+        {
+            $http->header('Referer', Request::url());
+        }
+
+        return $http;
     }
 }
