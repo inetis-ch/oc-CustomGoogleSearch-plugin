@@ -42,8 +42,8 @@ class SearchResults extends ComponentBase
             ],
             'resultPerPage' => [
                 'title'       => 'Results per page',
-                'description' => 'Results per page',
-                'default'     => 20,
+                'description' => 'Number of results per page. This is limited to max 10 by Google API',
+                'default'     => 10,
                 'type'        => 'string',
                 'required'    => true,
             ]
