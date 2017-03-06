@@ -1,2 +1,5 @@
 1.0.1:
     - Initialize plugin.
+1.0.2:
+    - Add http referer to restrict api key access
+    - Lower default results per page to 10
