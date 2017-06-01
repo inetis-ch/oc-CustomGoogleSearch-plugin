@@ -62,3 +62,6 @@ Custom Search API requires the use of an API key. You need to fill it in the set
 Custom Search Engine (free edition) users can obtain the key from the [Google API Console](https://console.developers.google.com/) .
 
 The API provides 100 search queries per day for free. If you need more, you may sign up for billing in the API Console. Additional requests cost $5 per 1000 queries, up to 10k queries per day.
+
+## Author
+inetis is a webdesign agency in Vufflens-la-Ville, Switzerland. We love coding and creating powerful apps and sites  [see our website](https://inetis.ch).
