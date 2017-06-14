@@ -31,7 +31,7 @@ Search | `{% component 'search' %}` | Outputs the search form
 **Properties**
 
 Property | Description | Default Value
-------------- | ------------- | ------------- | -------------
+------------- | ------------- | -------------
 apikey  | Google API Key | -
 cx  | Custom search engine id | format 1232342342344:xxxxxx
 resultPerPage  | Result per page | 20
