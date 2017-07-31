@@ -3,3 +3,5 @@
 1.0.2:
     - Add http referer to restrict api key access
     - Lower default results per page to 10
+1.0.3:
+    - Fix for Laravel 5.5 (OctoberCMS build 420 and higher)
