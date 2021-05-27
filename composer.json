@@ -1,5 +1,5 @@
 {
-    "name": "inetis/oc-googlecustomsearch-plugin",
+    "name": "inetis/googlecustomsearch-plugin",
     "type": "october-plugin",
     "description": "Add custom google search results to your site",
     "require": {
