@@ -5,3 +5,5 @@
     - Lower default results per page to 10
 1.0.3:
     - Fix for Laravel 5.5 (OctoberCMS build 420 and higher)
+1.0.4:
+    - Update validation rules to prevent selection of page sizes not allowed by Google API (thanks @zlobec)
