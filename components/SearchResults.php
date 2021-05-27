@@ -10,11 +10,12 @@ use Inetis\GoogleCustomSearch\Models\Settings;
 class SearchResults extends ComponentBase
 {
 
-    const APIURL = 'https://www.googleapis.com/customsearch/v1';
+    const APIURL = 'https://customsearch.googleapis.com/customsearch/v1';
 
     var $search;
     var $currentPage;
     var $resultPerPage;
+    var $maxResults;
 
     public function componentDetails()
     {
@@ -47,6 +48,8 @@ class SearchResults extends ComponentBase
                 'default'     => 10,
                 'type'        => 'string',
                 'required'    => true,
+                'validationPattern' => '^([0-9]|10)$',
+                'validationMessage' => 'Maximum results per page is limited to 10 by Google API',
             ],
             'sendReferer' => [
                 'title' => 'Send HTTP Referer',
@@ -64,7 +67,10 @@ class SearchResults extends ComponentBase
     {
         $this->search        = get('q');
         $this->currentPage   = (int) get('page', 1);
-        $this->resultPerPage = $this->property('resultPerPage');
+        // maximum per page results allowed from Google API
+        $this->resultPerPage = min(10, $this->property('resultPerPage'));
+        // maximum results allowed from Google API
+        $this->maxResults    = 100;
 
         $http     = $this->buildRequest();
         $response = json_decode($http->send());
@@ -77,8 +83,11 @@ class SearchResults extends ComponentBase
         }
         elseif ($response->searchInformation->totalResults)
         {
-            $this->page['totalResults'] = $response->searchInformation->totalResults;
-            $result                     = new LengthAwarePaginator($response->items, $response->searchInformation->totalResults, $this->resultPerPage, $this->currentPage);
+            // set the hard limit to all results and pagination
+            $totalResponseResults = min($this->maxResults, $response->searchInformation->totalResults);
+
+            $this->page['totalResults'] = $totalResponseResults;
+            $result                     = new LengthAwarePaginator($response->items, $totalResponseResults, $this->resultPerPage, $this->currentPage);
             $result->setPath($this->page['baseFileName']);
             $result->appends('q', $this->search);
             $this->page['results'] = $result;
@@ -96,7 +105,7 @@ class SearchResults extends ComponentBase
         $apiKey = $this->property('apikey');
         $cx     = $this->property('cx');
 
-        $start  = ($this->currentPage - 1) * $this->resultPerPage + 1;
+        $start  = min($this->maxResults, ($this->currentPage - 1) * $this->resultPerPage + 1);
         $params = array('key'   => $apiKey,
                         'cx'    => $cx,
                         'start' => $start,
