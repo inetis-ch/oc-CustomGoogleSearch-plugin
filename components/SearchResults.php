@@ -48,7 +48,7 @@ class SearchResults extends ComponentBase
                 'default'     => 10,
                 'type'        => 'string',
                 'required'    => true,
-                'validationPattern' => '^([0-9]|10)$',
+                'validationPattern' => '^([1-9]|10)$',
                 'validationMessage' => 'Maximum results per page is limited to 10 by Google API',
             ],
             'sendReferer' => [
@@ -68,7 +68,7 @@ class SearchResults extends ComponentBase
         $this->search        = get('q');
         $this->currentPage   = (int) get('page', 1);
         // maximum per page results allowed from Google API
-        $this->resultPerPage = min(10, $this->property('resultPerPage'));
+        $this->resultPerPage = max(1, min(10, $this->property('resultPerPage')));
         // maximum results allowed from Google API
         $this->maxResults    = 100;
 
