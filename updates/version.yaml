@@ -9,3 +9,5 @@
     - Update validation rules to prevent selection of page sizes not allowed by Google API (thanks @zlobec)
 1.0.5:
     - Add composer.json for October store
+1.0.6:
+    - Remove composer.lock to avoid dependency problems in the future
