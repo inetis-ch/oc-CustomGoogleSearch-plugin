@@ -11,3 +11,5 @@
     - Add composer.json for October store
 1.0.6:
     - Remove composer.lock to avoid dependency problems in the future
+1.0.7:
+    - Fix for OctoberCMS 3.0
