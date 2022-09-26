@@ -6,7 +6,7 @@ OctoberCMS plugin to add Google's Custom Search Engine (CSE) Search using the Go
 
 ### Search engine ID
 
-When calling the API, the user issues requests against an existing instance of a CSE. Therefore, before using this API you will need to create a CSE in the [CSE Google Control Panel](http://cse.google.com/manage/all). Follow the [tutorial](https://developers.google.com/custom-search/docs/tutorial/creatingcse) to learn more about the different configuration options. Once you have setup a CSE, you can find the CSE's ID in the **Setup > Basics > Details** section of the Control Panel for the CSE.
+When calling the API, the user issues requests against an existing instance of a CSE. Therefore, before using this API you will need to create a CSE in the [CSE Google Control Panel](https://programmablesearchengine.google.com/controlpanel/all). Follow the [tutorial](https://developers.google.com/custom-search/docs/tutorial/creatingcse) to learn more about the different configuration options. Once you have setup a CSE, you can find the CSE's ID in the **Setup > Basics > Details** section of the Control Panel for the CSE.
 
 ### API key
 
@@ -21,9 +21,9 @@ url="/results"
 layout="default"
 
 [searchResults]
-apiKey=XXXXXXXXXXXXXXXXXXX
+apikey=XXXXXXXXXXXXXXXXXXX
 cx=1232342342344:xxxxxx
-resultsPerPage=20
+resultsPerPage=10
 sendReferer=true
 ==
 {% component 'searchResults' %}
@@ -34,7 +34,7 @@ The default template for rendering the results is
 {% if results %}
 <ul>
     {% for result in results %}
-    <li> 
+    <li>
         <h3><a href="{{ result.link }}">{{ result.htmlTitle|raw }}</a></h3>
         {{ result.htmlSnippet|raw }}
     </li>

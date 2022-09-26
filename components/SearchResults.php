@@ -1,15 +1,13 @@
 <?php namespace Inetis\GoogleCustomSearch\Components;
 
 use Cms\Classes\ComponentBase;
-use Http;
 use Flash;
-use Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Inetis\GoogleCustomSearch\Models\Settings;
+use Inetis\GoogleCustomSearch\Classes\HttpClient;
+use Request;
 
 class SearchResults extends ComponentBase
 {
-
     const APIURL = 'https://customsearch.googleapis.com/customsearch/v1';
 
     var $search;
@@ -81,46 +79,32 @@ class SearchResults extends ComponentBase
         {
             Flash::error($response->error->message);
         }
-        elseif ($response->searchInformation->totalResults)
+        elseif ($totalResults = data_get($response, 'searchInformation.totalResults'))
         {
             // set the hard limit to all results and pagination
-            $totalResponseResults = min($this->maxResults, $response->searchInformation->totalResults);
+            $totalResponseResults = min($this->maxResults, $totalResults);
 
             $this->page['totalResults'] = $totalResponseResults;
-            $result                     = new LengthAwarePaginator($response->items, $totalResponseResults, $this->resultPerPage, $this->currentPage);
+            $result = new LengthAwarePaginator($response->items, $totalResponseResults, $this->resultPerPage, $this->currentPage);
             $result->setPath($this->page['baseFileName']);
             $result->appends('q', $this->search);
             $this->page['results'] = $result;
         }
     }
 
-    /**
-     * Calculate the API url call
-     *
-     * @return string
-     */
-    private function buildAPIUrl()
-    {
-
-        $apiKey = $this->property('apikey');
-        $cx     = $this->property('cx');
-
-        $start  = min($this->maxResults, ($this->currentPage - 1) * $this->resultPerPage + 1);
-        $params = array('key'   => $apiKey,
-                        'cx'    => $cx,
-                        'start' => $start,
-                        'q'     => $this->search,
-                        'num'   => $this->resultPerPage);
-
-        return self::APIURL . '?' . http_build_query($params);
-    }
-
     private function buildRequest()
     {
-        $http = Http::make($this->buildAPIUrl(), 'GET');
+        $http = HttpClient::make(self::APIURL);
 
-        if ($this->property('sendReferer'))
-        {
+        $http->setData([
+            'key'   => $this->property('apikey'),
+            'cx'    => $this->property('cx'),
+            'start' => min($this->maxResults, ($this->currentPage - 1) * $this->resultPerPage + 1),
+            'q'     => $this->search,
+            'num'   => $this->resultPerPage,
+        ]);
+
+        if ($this->property('sendReferer')) {
             $http->header('Referer', Request::url());
         }
 
