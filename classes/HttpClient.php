@@ -43,6 +43,13 @@ class HttpClient
         return $this;
     }
 
+    public function addData($data)
+    {
+        $this->requestData = array_merge($this->requestData, $data);
+
+        return $this;
+    }
+
     public function send()
     {
         $curl = curl_init();

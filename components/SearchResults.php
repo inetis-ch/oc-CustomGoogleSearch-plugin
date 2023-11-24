@@ -5,6 +5,7 @@ use Flash;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Inetis\GoogleCustomSearch\Classes\HttpClient;
 use Request;
+use System\Classes\SiteManager;
 
 class SearchResults extends ComponentBase
 {
@@ -54,7 +55,13 @@ class SearchResults extends ComponentBase
                 'description' => 'If you are using "HTTP Referer" to restrict access to your Google API Key, please enable this option to make the plugin send the url of the viewed page as referer.',
                 'default' => true,
                 'type' => 'checkbox'
-            ]
+            ],
+            'preferSiteLanguage' => [
+                'title' => 'Prefer site language',
+                'description' => 'Send the current frontend language to Google API, allowing to improve results ordering on multi-lang sites (only works October 3+ multisite when site locales are defined).',
+                'default' => true,
+                'type' => 'checkbox'
+            ],
         ];
     }
 
@@ -103,6 +110,14 @@ class SearchResults extends ComponentBase
             'q'     => $this->search,
             'num'   => $this->resultPerPage,
         ]);
+
+        if (
+            class_exists(SiteManager::class) &&
+            $this->property('preferSiteLanguage') &&
+            ($locale = data_get(SiteManager::instance()->getActiveSite(), 'locale'))
+        ) {
+            $http->addData(['hl' => $locale]);
+        }
 
         if ($this->property('sendReferer')) {
             $http->header('Referer', Request::url());
